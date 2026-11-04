@@ -95,4 +95,6 @@ export interface GatewaySettings {
 
 export interface AuthSettings {
   auth_method: string;
+  push_enabled: boolean;
+  push_provider: string;
 }
