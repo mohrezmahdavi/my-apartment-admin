@@ -1,9 +1,7 @@
-export type ApiErrorBody = Record<string, string[]> | null;
-
 export interface ApiResponse<T> {
   items: T;
   message: string;
-  errors: ApiErrorBody;
+  errors: Record<string, string[]> | null;
   token?: string;
 }
 
@@ -17,15 +15,22 @@ export class ApiError extends Error {
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const TOKEN_KEY = "admin_token";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("admin_token");
+  return localStorage.getItem(TOKEN_KEY);
 }
 
 export function setToken(token: string | null) {
-  if (token) localStorage.setItem("admin_token", token);
-  else localStorage.removeItem("admin_token");
+  if (token) localStorage.setItem(TOKEN_KEY, token);
+  else localStorage.removeItem(TOKEN_KEY);
+}
+
+export function errorText(caught: unknown, fallback = "خطایی رخ داد.") {
+  if (caught instanceof ApiError) return caught.message;
+  if (caught instanceof Error && caught.message) return caught.message;
+  return fallback;
 }
 
 export async function api<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
@@ -54,45 +59,17 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<A
   return data;
 }
 
-export interface AdminUser {
-  id: number;
-  first_name: string | null;
-  last_name: string | null;
-  mobile: string;
-  email: string | null;
-  created_at?: string | null;
-  roles?: Role[];
-  permissions?: string[];
+function send<T>(path: string, method: string, body?: unknown) {
+  return api<T>(path, {
+    method,
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+  });
 }
 
-export interface Role {
-  id: number;
-  name: string;
-  label: string | null;
-  users_count?: number;
-  permissions_count?: number;
-  permissions?: Permission[];
-}
-
-export interface Permission {
-  id: number;
-  name: string;
-  label: string | null;
-  group: string | null;
-}
-
-export interface WalletSnapshot {
-  wallet: { id: number; balance: number; available_balance: number } | null;
-  transactions: {
-    id: number;
-    type: number;
-    amount: number;
-    balance_after: number;
-    description: string | null;
-    created_at: string | null;
-  }[];
-}
-
-export function fullName(user: { first_name: string | null; last_name: string | null }) {
-  return [user.first_name, user.last_name].filter(Boolean).join(" ") || "بدون نام";
-}
+export const http = {
+  get: <T>(path: string) => api<T>(path),
+  post: <T>(path: string, body?: unknown) => send<T>(path, "POST", body),
+  put: <T>(path: string, body?: unknown) => send<T>(path, "PUT", body),
+  patch: <T>(path: string, body?: unknown) => send<T>(path, "PATCH", body),
+  delete: <T>(path: string) => send<T>(path, "DELETE"),
+};

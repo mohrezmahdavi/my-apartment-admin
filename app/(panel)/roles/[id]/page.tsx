@@ -1,69 +1,58 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ApiError, Permission, Role, api } from "../../../_lib/api";
-import { RoleForm } from "../../../_components/role-form";
+import { RoleForm } from "@/components/role-form";
+import { Alert, Loading } from "@/components/ui";
+import { apiPaths } from "@/lib/endpoints";
+import { field } from "@/lib/form";
+import { http } from "@/lib/http";
+import { useAction } from "@/lib/use-action";
+import { useQuery } from "@/lib/use-query";
+import type { PermissionCatalog, Role } from "@/lib/types";
 
 export default function EditRolePage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
-  const [role, setRole] = useState<Role | null>(null);
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [groups, setGroups] = useState<Record<string, string>>({});
-  const [selected, setSelected] = useState<number[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    Promise.all([
-      api<{ role: Role }>(`/acl-service/v1/roles/${params.id}`),
-      api<{ permissions: Permission[]; groups: Record<string, string> }>("/acl-service/v1/permissions"),
-    ])
-      .then(([roleResponse, permissionResponse]) => {
-        setRole(roleResponse.items.role);
-        setSelected(roleResponse.items.role.permissions?.map((permission) => permission.id) ?? []);
-        setPermissions(permissionResponse.items.permissions);
-        setGroups(permissionResponse.items.groups);
-      })
-      .catch((caught: Error) => setError(caught.message));
-  }, [params.id]);
+  const roleQuery = useQuery<{ role: Role }>(apiPaths.role(params.id));
+  const catalog = useQuery<PermissionCatalog>(apiPaths.permissions);
+  const action = useAction();
+  const [selected, setSelected] = useState<number[] | null>(null);
+  const role = roleQuery.data?.role ?? null;
+  const permissionIds = selected ?? role?.permissions?.map((permission) => permission.id) ?? [];
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    try {
-      await api(`/acl-service/v1/roles/${params.id}`, {
-        method: "PUT",
-        body: JSON.stringify({ label: form.get("label"), permissions: selected }),
-      });
+    await action.run(async () => {
+      await http.put(apiPaths.role(params.id), { label: field(form, "label"), permissions: permissionIds });
       router.push("/roles");
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "ذخیره انجام نشد.");
-    }
+    }, "ذخیره انجام نشد.");
   }
 
   async function onDelete() {
     if (!confirm("این نقش حذف شود؟")) return;
-    try {
-      await api(`/acl-service/v1/roles/${params.id}`, { method: "DELETE" });
+    await action.run(async () => {
+      await http.delete(apiPaths.role(params.id));
       router.push("/roles");
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "حذف انجام نشد.");
-    }
+    }, "حذف انجام نشد.");
   }
 
-  if (!role) return <p className="text-slate-500">{error || "در حال بارگذاری..."}</p>;
+  if (!role) {
+    const error = roleQuery.error || catalog.error;
+    return error ? <Alert kind="error">{error}</Alert> : <Loading />;
+  }
 
   return (
     <RoleForm
       title={role.label || role.name}
       name={role.name}
       label={role.label || ""}
-      permissions={permissions}
-      groups={groups}
-      selected={selected}
-      setSelected={setSelected}
-      error={error}
+      permissions={catalog.data?.permissions ?? []}
+      groups={catalog.data?.groups ?? {}}
+      selected={permissionIds}
+      onChange={setSelected}
+      error={action.error}
       onSubmit={onSubmit}
       onDelete={role.name === "super_admin" ? undefined : onDelete}
     />

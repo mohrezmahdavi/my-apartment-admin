@@ -2,17 +2,76 @@
 
 :root {
   color-scheme: light;
-  --background: #f4f7fb;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --line: #e2e8f0;
+  --canvas: #eef2f6;
+  --surface: #ffffff;
+  --surface-2: #f5f7fb;
+  --ink: #121826;
+  --muted: #5d6b82;
+  --line: #e3e8f0;
   --primary: #0f766e;
+  --primary-ink: #ffffff;
+  --primary-soft: #d7f5f1;
+  --danger: #be123c;
+  --danger-soft: #ffe4e9;
+  --success: #047857;
+  --success-soft: #d8f5ea;
+  --shadow: 0 24px 60px rgb(15 23 42 / 8%);
+  --ring: rgb(15 118 110 / 22%);
+}
+
+.dark {
+  color-scheme: dark;
+  --canvas: #090d14;
+  --surface: #131a24;
+  --surface-2: #1b2431;
+  --ink: #f3f6fb;
+  --muted: #9aa8bd;
+  --line: #2a3546;
+  --primary: #2dd4bf;
+  --primary-ink: #042f2e;
+  --primary-soft: rgb(45 212 191 / 14%);
+  --danger: #fb7185;
+  --danger-soft: rgb(251 113 133 / 14%);
+  --success: #34d399;
+  --success-soft: rgb(52 211 153 / 14%);
+  --shadow: 0 24px 60px rgb(0 0 0 / 35%);
+  --ring: rgb(45 212 191 / 28%);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  overflow-x: clip;
+  background:
+    radial-gradient(circle at 100% 0%, rgb(15 118 110 / 8%), transparent 28rem),
+    var(--canvas);
+  color: var(--ink);
   font-family: var(--font-app), Tahoma, sans-serif;
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at 100% 0%, rgb(45 212 191 / 8%), transparent 28rem),
+    var(--canvas);
 }
 
 button,
@@ -22,54 +81,211 @@ textarea {
   font: inherit;
 }
 
+::selection {
+  background: var(--primary-soft);
+  color: var(--ink);
+}
+
 .card {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 20px;
+  box-shadow: 0 1px 0 rgb(255 255 255 / 4%) inset;
 }
 
 .field {
   width: 100%;
-  border: 1px solid #cbd5e1;
-  border-radius: 12px;
-  background: white;
-  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 0.8rem 0.9rem;
   outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field::placeholder {
+  color: var(--muted);
 }
 
 .field:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgb(15 118 110 / 15%);
+  box-shadow: 0 0 0 4px var(--ring);
+}
+
+.field:disabled {
+  cursor: not-allowed;
+  background: var(--surface-2);
+  opacity: 0.72;
+}
+
+.field-invalid {
+  border-color: var(--danger);
 }
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  border-radius: 12px;
-  padding: 0.65rem 1rem;
+  gap: 0.45rem;
+  border-radius: 14px;
+  padding: 0.75rem 1.05rem;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+  transform: none;
+}
+
+.btn-wrap:has(button:disabled) {
+  cursor: not-allowed;
 }
 
 .btn-primary {
   background: var(--primary);
-  color: white;
-}
-
-.btn-primary:disabled {
-  opacity: 0.6;
-  cursor: wait;
+  color: var(--primary-ink);
 }
 
 .btn-ghost {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--line);
-  color: #334155;
+  color: var(--ink);
 }
 
 .btn-danger {
-  background: #fff1f2;
-  color: #be123c;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.alert {
+  border-radius: 14px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.alert-error {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.alert-success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 0.75rem 0.85rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.check:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.check input {
+  accent-color: var(--primary);
+  width: 1rem;
+  height: 1rem;
+}
+
+.segment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+}
+
+.segment button {
+  border-radius: 12px;
+  padding: 0.7rem 0.5rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.segment button[aria-selected="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 6px 16px rgb(15 23 42 / 6%);
+}
+
+.theme-toggle {
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: var(--surface-2);
+}
+
+.login-hero {
+  background:
+    radial-gradient(circle at 18% 18%, rgb(45 212 191 / 42%), transparent 26%),
+    radial-gradient(circle at 82% 8%, rgb(56 189 248 / 28%), transparent 24%),
+    radial-gradient(circle at 70% 82%, rgb(16 185 129 / 24%), transparent 28%),
+    linear-gradient(165deg, #042f2e 0%, #0f766e 52%, #082f49 100%);
+  color: white;
+}
+
+.dark .login-hero {
+  background:
+    radial-gradient(circle at 18% 18%, rgb(45 212 191 / 18%), transparent 28%),
+    radial-gradient(circle at 80% 12%, rgb(99 102 241 / 16%), transparent 26%),
+    linear-gradient(165deg, #031614 0%, #0c1b22 58%, #020617 100%);
+}
+
+.spinner {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  animation: spin 0.7s linear infinite;
+}
+
+.spinner-lg {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+  color: var(--primary);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .spinner {
+    animation: none;
+    transition: none;
+  }
 }

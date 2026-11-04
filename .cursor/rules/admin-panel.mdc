@@ -1,0 +1,17 @@
+---
+description: Admin panel conventions. Full guide is AGENTS.md.
+globs: "{app,lib,components}/**/*.{ts,tsx,css}"
+alwaysApply: false
+---
+
+# Admin panel
+
+Before editing this project, follow `AGENTS.md`. The Persian twin is `AGENTS.fa.md`. Human setup is `README.md` and `README.fa.md`.
+
+- UI copy stays Persian. Routes, permission keys, and JSON fields stay English.
+- Call the API only through `lib/http.ts` and `lib/endpoints.ts`. Read `response.items`.
+- Register a new screen in `components/nav.ts` and gate actions with `useAuth().can`.
+- Keep login submit disabled until the mobile, password, or 5-digit code is valid.
+- Do not show پاگرد on the login page.
+- Use the theme tokens in `app/globals.css`. Do not hard-code surface colors.
+- Typecheck with `./node_modules/.bin/tsc --noEmit`, then exercise the changed flow in the browser on port 3001.

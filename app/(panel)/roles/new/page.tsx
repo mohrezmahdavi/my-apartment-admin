@@ -1,42 +1,32 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ApiError, Permission, api } from "../../../_lib/api";
-import { RoleForm } from "../../../_components/role-form";
+import { RoleForm } from "@/components/role-form";
+import { apiPaths } from "@/lib/endpoints";
+import { field } from "@/lib/form";
+import { http } from "@/lib/http";
+import { useAction } from "@/lib/use-action";
+import { useQuery } from "@/lib/use-query";
+import type { PermissionCatalog } from "@/lib/types";
 
 export default function NewRolePage() {
   const router = useRouter();
-  const [permissions, setPermissions] = useState<Permission[]>([]);
-  const [groups, setGroups] = useState<Record<string, string>>({});
+  const catalog = useQuery<PermissionCatalog>(apiPaths.permissions);
+  const action = useAction();
   const [selected, setSelected] = useState<number[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    api<{ permissions: Permission[]; groups: Record<string, string> }>("/acl-service/v1/permissions")
-      .then((response) => {
-        setPermissions(response.items.permissions);
-        setGroups(response.items.groups);
-      })
-      .catch((caught: Error) => setError(caught.message));
-  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    try {
-      const response = await api<{ role: { id: number } }>("/acl-service/v1/roles", {
-        method: "POST",
-        body: JSON.stringify({
-          name: form.get("name"),
-          label: form.get("label"),
-          permissions: selected,
-        }),
+    await action.run(async () => {
+      const response = await http.post<{ role: { id: number } }>(apiPaths.roles, {
+        name: field(form, "name"),
+        label: field(form, "label"),
+        permissions: selected,
       });
       router.push(`/roles/${response.items.role.id}`);
-    } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "ایجاد نقش انجام نشد.");
-    }
+    }, "ایجاد نقش انجام نشد.");
   }
 
   return (
@@ -45,11 +35,11 @@ export default function NewRolePage() {
       name=""
       label=""
       nameEditable
-      permissions={permissions}
-      groups={groups}
+      permissions={catalog.data?.permissions ?? []}
+      groups={catalog.data?.groups ?? {}}
       selected={selected}
-      setSelected={setSelected}
-      error={error}
+      onChange={setSelected}
+      error={catalog.error || action.error}
       onSubmit={onSubmit}
     />
   );

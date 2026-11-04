@@ -2,7 +2,10 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { AdminUser, api, getToken, setToken } from "./api";
+import { apiPaths } from "@/lib/endpoints";
+import { toLatinDigits } from "@/lib/format";
+import { getToken, http, setToken } from "@/lib/http";
+import type { AdminUser } from "@/lib/types";
 
 interface AuthState {
   user: AdminUser | null;
@@ -16,6 +19,11 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+function storeSession(token: string | undefined, user: AdminUser, setUser: (user: AdminUser) => void) {
+  setToken(token ?? null);
+  setUser(user);
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AdminUser | null>(null);
   const [ready, setReady] = useState(false);
@@ -28,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    api<{ user: AdminUser }>("/account-service/v1/me")
+    http.get<{ user: AdminUser }>(apiPaths.me)
       .then((response) => setUser(response.items.user))
       .catch(() => setToken(null))
       .finally(() => setReady(true));
@@ -41,34 +49,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [ready, user, pathname, router]);
 
   async function login(mobile: string, password: string) {
-    const response = await api<{ user: AdminUser }>("/account-service/v1/login", {
-      method: "POST",
-      body: JSON.stringify({ mobile, password }),
+    const response = await http.post<{ user: AdminUser }>(apiPaths.login, {
+      mobile: toLatinDigits(mobile),
+      password,
     });
-    setToken(response.token ?? null);
-    setUser(response.items.user);
+    storeSession(response.token, response.items.user, setUser);
   }
 
   async function sendOtp(mobile: string) {
-    const response = await api<{ expires_in: number }>("/account-service/v1/otp/send", {
-      method: "POST",
-      body: JSON.stringify({ mobile }),
+    const response = await http.post<{ expires_in: number }>(apiPaths.otpSend, {
+      mobile: toLatinDigits(mobile),
     });
     return response.items.expires_in ?? 120;
   }
 
   async function verifyOtp(mobile: string, code: string) {
-    const response = await api<{ user: AdminUser }>("/account-service/v1/otp/verify", {
-      method: "POST",
-      body: JSON.stringify({ mobile, code }),
+    const response = await http.post<{ user: AdminUser }>(apiPaths.otpVerify, {
+      mobile: toLatinDigits(mobile),
+      code: toLatinDigits(code),
     });
-    setToken(response.token ?? null);
-    setUser(response.items.user);
+    storeSession(response.token, response.items.user, setUser);
   }
 
   async function logout() {
     try {
-      await api("/account-service/v1/logout", { method: "POST" });
+      await http.post(apiPaths.logout);
     } finally {
       setToken(null);
       setUser(null);
@@ -81,21 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [user],
   );
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        ready,
-        can,
-        login,
-        sendOtp,
-        verifyOtp,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, ready, can, login, sendOtp, verifyOtp, logout }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
