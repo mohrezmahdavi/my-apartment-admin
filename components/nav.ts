@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { CardIcon, GridIcon, ReceiptIcon, ShieldIcon, SlidersIcon, UsersIcon } from "@/components/icons";
+import { CardIcon, GridIcon, ReceiptIcon, ShieldIcon, SlidersIcon, SupportIcon, UsersIcon } from "@/components/icons";
 
 export interface NavItem {
   href: string;
@@ -15,6 +15,7 @@ export const navItems: NavItem[] = [
   { href: "/roles", label: "نقش‌ها", permission: "roles.view", description: "دسترسی‌ها و نقش‌های مدیریتی", icon: ShieldIcon },
   { href: "/bills", label: "قبض‌ها", permission: "bills.view", description: "سرویس استعلام و کارمزد", icon: ReceiptIcon },
   { href: "/payments", label: "درگاه پرداخت", permission: "payments.view", description: "درگاه فعال پرداخت", icon: CardIcon },
+  { href: "/support", label: "پشتیبانی", permission: "support.view", description: "درخواست‌های کاربران", icon: SupportIcon },
   { href: "/settings", label: "تنظیمات", permission: "settings.manage", description: "ورود اپلیکیشن و پوش", icon: SlidersIcon },
 ];
 

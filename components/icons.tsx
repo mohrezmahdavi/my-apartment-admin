@@ -60,6 +60,16 @@ export function CardIcon(props: IconProps) {
   );
 }
 
+export function SupportIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <circle cx="12" cy="12" r="8" />
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 4v2.2M12 17.8V20M4 12h2.2M17.8 12H20" strokeLinecap="round" />
+    </Base>
+  );
+}
+
 export function SlidersIcon(props: IconProps) {
   return (
     <Base {...props}>

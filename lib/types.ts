@@ -98,3 +98,37 @@ export interface AuthSettings {
   push_enabled: boolean;
   push_provider: string;
 }
+
+export interface SupportUser {
+  id: number | null;
+  first_name: string | null;
+  last_name: string | null;
+  mobile: string | null;
+}
+
+export interface SupportMessage {
+  id: number;
+  body: string;
+  author_side: "user" | "staff";
+  author_name: string;
+  created_at: string | null;
+}
+
+export interface SupportTicket {
+  id: number;
+  subject: string;
+  category: string;
+  category_label: string;
+  status: "open" | "answered" | "closed";
+  status_label: string;
+  preview: string;
+  last_message_at: string | null;
+  created_at: string | null;
+  user?: SupportUser;
+  messages?: SupportMessage[];
+}
+
+export interface SupportList {
+  tickets: SupportTicket[];
+  pagination: { current_page: number; last_page: number; total: number };
+}

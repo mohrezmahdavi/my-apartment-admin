@@ -4,6 +4,7 @@ const wallet = "/wallet-service/v1";
 const bills = "/bill-service/v1";
 const payments = "/payment-service/v1";
 const settings = "/setting-service/v1";
+const support = "/support-service/v1";
 
 export const apiPaths = {
   login: `${account}/login`,
@@ -27,4 +28,9 @@ export const apiPaths = {
   gateway: `${payments}/gateway`,
   gatewayCache: `${payments}/gateway/refresh-cache`,
   settings: `${settings}/settings`,
+  tickets: (query = "") => (query ? `${support}/tickets?${query}` : `${support}/tickets`),
+  ticket: (id: string | number) => `${support}/tickets/${id}`,
+  ticketMessages: (id: string | number) => `${support}/tickets/${id}/messages`,
+  ticketClose: (id: string | number) => `${support}/tickets/${id}/close`,
+  ticketReopen: (id: string | number) => `${support}/tickets/${id}/reopen`,
 };
