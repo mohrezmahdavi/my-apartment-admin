@@ -93,6 +93,23 @@ export interface GatewaySettings {
   current: { driver: string; is_active: boolean } | null;
 }
 
+export interface GatewayFeeRule {
+  enabled: boolean;
+  type: "flat" | "percent";
+  value: number;
+  min_amount: number;
+}
+
+export interface GatewayFeeSnapshot {
+  fees: {
+    charge: GatewayFeeRule;
+    wallet: GatewayFeeRule;
+    bill: GatewayFeeRule;
+  };
+  wallet: { id: number; balance: number; available_balance: number };
+  transactions: WalletTransaction[];
+}
+
 export interface AuthSettings {
   auth_method: string;
   push_enabled: boolean;

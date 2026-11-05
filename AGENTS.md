@@ -75,7 +75,7 @@ Routes are mounted from `routes/api.php` with prefix `admin`, on top of Laravel'
 | `acl-service/v1` | permissions, roles CRUD, `PUT users/{user}/roles` | `roles.view` or `roles.manage` |
 | `wallet-service/v1` | `GET users/{user}/wallet`, `POST .../adjust` | `wallet.view` `wallet.adjust` |
 | `bill-service/v1` | providers, `refresh-cache`, `finnotech-token` | `bills.view` `bills.manage` |
-| `payment-service/v1` | gateway, `refresh-cache` | `payments.view` `payments.manage` |
+| `payment-service/v1` | gateway, `refresh-cache`, fee, `fee/adjust` | `payments.view` `payments.manage` |
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |
 
 Protected routes use `auth:sanctum` and `admin` (`EnsureAdmin`). `CheckPermission` reads `$request->user()`.

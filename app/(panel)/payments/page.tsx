@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
+import { FeeSettingsForm, PlatformWalletPanel, feePayload, platformWalletPayload } from "./fee-panel";
 import { Alert, Loading, Notices, PageHeader, Screen, SelectField } from "@/components/ui";
 import { apiPaths } from "@/lib/endpoints";
 import { field, isChecked } from "@/lib/form";
@@ -8,11 +9,12 @@ import { http } from "@/lib/http";
 import { useAuth } from "@/lib/auth";
 import { useAction } from "@/lib/use-action";
 import { useQuery } from "@/lib/use-query";
-import type { GatewaySettings } from "@/lib/types";
+import type { GatewayFeeSnapshot, GatewaySettings } from "@/lib/types";
 
 export default function PaymentsPage() {
   const { can } = useAuth();
   const gateway = useQuery<GatewaySettings>(apiPaths.gateway);
+  const fee = useQuery<GatewayFeeSnapshot>(apiPaths.paymentFee);
   const action = useAction();
   const payload = gateway.data;
 
@@ -29,6 +31,28 @@ export default function PaymentsPage() {
     }, "ذخیره انجام نشد.");
   }
 
+  async function saveFee(event: FormEvent<HTMLFormElement>, scope: "charge" | "wallet" | "bill") {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    await action.run(async () => {
+      const response = await http.put<GatewayFeeSnapshot>(apiPaths.paymentFee, feePayload(form, scope));
+      fee.setData(response.items);
+      return response.message;
+    }, "ذخیره کارمزد انجام نشد.");
+  }
+
+  async function adjustWallet(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const body = platformWalletPayload(new FormData(form));
+    await action.run(async () => {
+      const response = await http.post<GatewayFeeSnapshot>(apiPaths.paymentFeeAdjust, body);
+      fee.setData(response.items);
+      form.reset();
+      return response.message;
+    }, "تغییر موجودی انجام نشد.");
+  }
+
   async function refreshCache() {
     await action.run(async () => (await http.post(apiPaths.gatewayCache)).message, "بازسازی کش انجام نشد.");
   }
@@ -36,9 +60,9 @@ export default function PaymentsPage() {
   if (!payload) return gateway.error ? <Alert kind="error">{gateway.error}</Alert> : <Loading />;
 
   return (
-    <Screen narrow>
-      <PageHeader title="درگاه پرداخت" description="سرویس‌دهنده فعال پرداخت را انتخاب کنید" />
-      <Notices message={action.message} error={action.error} />
+    <Screen>
+      <PageHeader title="درگاه پرداخت" description="سرویس‌دهنده فعال و سه کارمزد جدا" />
+      <Notices message={action.message} error={action.error || fee.error} />
       <form key={`${payload.current?.driver}-${payload.current?.is_active}`} className="card space-y-3 p-5" onSubmit={onSubmit}>
         <SelectField label="سرویس‌دهنده" name="driver" defaultValue={payload.current?.driver} disabled={!can("payments.manage")}>
           {payload.drivers.map((driver) => (
@@ -56,6 +80,35 @@ export default function PaymentsPage() {
           </div>
         ) : null}
       </form>
+      {fee.data ? (
+        <>
+          <FeeSettingsForm
+            scope="bill"
+            title="کارمزد پرداخت قبض"
+            description="چون مبلغ قبض در درگاه باید با شناسه پرداخت یکی باشد، این کارمزد بعد از پرداخت موفق از کیف پول ساکن برداشته می‌شود."
+            fee={fee.data.fees.bill}
+            manageable={can("payments.manage")}
+            onSubmit={(event) => void saveFee(event, "bill")}
+          />
+          <FeeSettingsForm
+            scope="wallet"
+            title="کارمزد شارژ کیف پول"
+            description="فقط وقتی ساکن از درگاه موجودی کیف پول را زیاد کند."
+            fee={fee.data.fees.wallet}
+            manageable={can("payments.manage")}
+            onSubmit={(event) => void saveFee(event, "wallet")}
+          />
+          <FeeSettingsForm
+            scope="charge"
+            title="کارمزد پرداخت شارژ ساختمان"
+            description="فقط وقتی ساکن سهم صورتحساب ساختمان را از درگاه پرداخت کند. پرداخت همان سهم با کیف پول این کارمزد را ندارد."
+            fee={fee.data.fees.charge}
+            manageable={can("payments.manage")}
+            onSubmit={(event) => void saveFee(event, "charge")}
+          />
+          <PlatformWalletPanel snapshot={fee.data} adjustable={can("payments.manage")} onSubmit={adjustWallet} />
+        </>
+      ) : null}
     </Screen>
   );
 }

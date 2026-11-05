@@ -27,6 +27,8 @@ export const apiPaths = {
   finnotechToken: `${bills}/finnotech-token`,
   gateway: `${payments}/gateway`,
   gatewayCache: `${payments}/gateway/refresh-cache`,
+  paymentFee: `${payments}/fee`,
+  paymentFeeAdjust: `${payments}/fee/adjust`,
   settings: `${settings}/settings`,
   tickets: (query = "") => (query ? `${support}/tickets?${query}` : `${support}/tickets`),
   ticket: (id: string | number) => `${support}/tickets/${id}`,
