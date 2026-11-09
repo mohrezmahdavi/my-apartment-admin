@@ -77,6 +77,8 @@ Authorization: Bearer <admin_token>
 | `bill-service/v1` | سرویس‌ها، `refresh-cache`، `finnotech-token` | `bills.view` و `bills.manage` |
 | `payment-service/v1` | درگاه و `refresh-cache` | `payments.view` و `payments.manage` |
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |
+| `building-service/v1` | فهرست و جزئیات ساختمان | `buildings.view` |
+| `subscription-service/v1` | پلن‌ها، تنظیمات، تمدید | `subscriptions.view` `subscriptions.manage` |
 
 مسیرهای محافظت‌شده `auth:sanctum` و `admin` یعنی `EnsureAdmin` دارند. `CheckPermission` از `$request->user()` می‌خواند.
 

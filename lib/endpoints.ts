@@ -5,6 +5,8 @@ const bills = "/bill-service/v1";
 const payments = "/payment-service/v1";
 const settings = "/setting-service/v1";
 const support = "/support-service/v1";
+const subscriptions = "/subscription-service/v1";
+const buildings = "/building-service/v1";
 
 export const apiPaths = {
   login: `${account}/login`,
@@ -35,4 +37,12 @@ export const apiPaths = {
   ticketMessages: (id: string | number) => `${support}/tickets/${id}/messages`,
   ticketClose: (id: string | number) => `${support}/tickets/${id}/close`,
   ticketReopen: (id: string | number) => `${support}/tickets/${id}/reopen`,
+  buildings: (query = "") => (query ? `${buildings}/buildings?${query}` : `${buildings}/buildings`),
+  building: (id: string | number) => `${buildings}/buildings/${id}`,
+  subscriptionSettings: `${subscriptions}/settings`,
+  subscriptionPlans: `${subscriptions}/plans`,
+  subscriptionPlan: (id: string | number) => `${subscriptions}/plans/${id}`,
+  subscriptionAssignPlan: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/plan`,
+  subscriptionExtend: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/extend`,
+  subscriptionWaive: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/waive`,
 };

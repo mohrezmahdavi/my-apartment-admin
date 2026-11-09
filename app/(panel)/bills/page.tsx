@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent } from "react";
-import { SelectField, Notices, PageHeader, Screen } from "@/components/ui";
+import { MoneyField, SelectField, Notices, PageHeader, Screen } from "@/components/ui";
 import { apiPaths } from "@/lib/endpoints";
 import { field, isChecked, numberField } from "@/lib/form";
 import { http } from "@/lib/http";
@@ -75,10 +75,7 @@ export default function BillsPage() {
             <span>مقدار کارمزد</span>
             <input className="field" name="fee_value" type="number" defaultValue={row.current?.fee_value ?? 0} disabled={!manageable} />
           </label>
-          <label className="space-y-1.5 text-sm font-medium">
-            <span>حداقل کارمزد</span>
-            <input className="field" name="min_fee_amount" type="number" defaultValue={row.current?.min_fee_amount ?? 0} disabled={!manageable} />
-          </label>
+          <MoneyField label="حداقل کارمزد (تومان)" name="min_fee_amount" defaultValue={row.current?.min_fee_amount ?? 0} disabled={!manageable} />
           <label className="check"><input name="is_active" type="checkbox" defaultChecked={row.current?.is_active} disabled={!manageable} /> فعال</label>
           <label className="check"><input name="fee_enabled" type="checkbox" defaultChecked={row.current?.fee_enabled} disabled={!manageable} /> کارمزد</label>
           {manageable ? <button className="btn btn-primary md:col-span-3 md:w-fit" type="submit">ذخیره</button> : null}

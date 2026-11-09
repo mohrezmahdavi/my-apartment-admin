@@ -1,8 +1,8 @@
 "use client";
 
 import type { FormEvent } from "react";
-import { Field, SelectField } from "@/components/ui";
-import { faNumber } from "@/lib/format";
+import { Field, MoneyField, SelectField } from "@/components/ui";
+import { applyAmountGrouping, faNumber } from "@/lib/format";
 import { field, isChecked, numberField } from "@/lib/form";
 import { DEPOSIT, type GatewayFeeRule, type GatewayFeeSnapshot } from "@/lib/types";
 
@@ -34,7 +34,7 @@ export function FeeSettingsForm({
         <option value="percent">درصدی</option>
       </SelectField>
       <Field label="مقدار" name={`${scope}_value`} type="number" min={0} defaultValue={fee.value} disabled={!manageable} />
-      <Field label="حداقل کارمزد (تومان)" name={`${scope}_min_amount`} type="number" min={0} defaultValue={fee.min_amount} disabled={!manageable} className="md:col-span-2" />
+      <MoneyField label="حداقل کارمزد (تومان)" name={`${scope}_min_amount`} defaultValue={fee.min_amount} disabled={!manageable} className="md:col-span-2" />
       {manageable ? <button className="btn btn-primary md:w-fit" type="submit">ذخیره کارمزد</button> : null}
     </form>
   );
@@ -72,7 +72,7 @@ export function PlatformWalletPanel({
             <option value="withdraw">برداشت</option>
             <option value="deposit">واریز اصلاحی</option>
           </select>
-          <input className="field" name="amount" type="number" min={1} placeholder="مبلغ" required />
+          <input className="field" name="amount" dir="ltr" inputMode="numeric" placeholder="مبلغ" required onInput={(event) => applyAmountGrouping(event.currentTarget)} />
           <input className="field" name="description" placeholder="توضیح" required />
           <button className="btn btn-primary" type="submit">ثبت</button>
         </form>

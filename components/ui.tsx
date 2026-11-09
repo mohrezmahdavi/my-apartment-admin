@@ -1,5 +1,7 @@
+"use client";
+
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react";
-import { toggleId } from "@/lib/format";
+import { applyAmountGrouping, groupThousands, toggleId } from "@/lib/format";
 
 export function Screen({ children, narrow }: { children: ReactNode; narrow?: boolean }) {
   return <section className={narrow ? "mx-auto max-w-xl space-y-5" : "space-y-5"}>{children}</section>;
@@ -52,6 +54,29 @@ export function Field({ label, className, ...props }: { label: string; className
     <label className={`block space-y-1.5 text-sm font-medium ${className ?? ""}`}>
       <span>{label}</span>
       <input className="field" {...props} />
+    </label>
+  );
+}
+
+export function MoneyField({
+  label,
+  className,
+  defaultValue,
+  ...props
+}: { label: string; className?: string } & Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onInput">) {
+  return (
+    <label className={`block space-y-1.5 text-sm font-medium ${className ?? ""}`}>
+      <span>{label}</span>
+      <input
+        className="field"
+        dir="ltr"
+        inputMode="numeric"
+        autoComplete="off"
+        defaultValue={groupThousands(String(defaultValue ?? ""))}
+        onInput={(event) => applyAmountGrouping(event.currentTarget)}
+        {...props}
+        type="text"
+      />
     </label>
   );
 }

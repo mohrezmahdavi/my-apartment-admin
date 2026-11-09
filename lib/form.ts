@@ -1,3 +1,5 @@
+import { parseAmount } from "@/lib/format";
+
 export function field(form: FormData, name: string) {
   const value = form.get(name);
   return typeof value === "string" ? value : "";
@@ -12,5 +14,5 @@ export function isChecked(form: FormData, name: string) {
 }
 
 export function numberField(form: FormData, name: string) {
-  return Number(field(form, name) || 0);
+  return parseAmount(field(form, name));
 }

@@ -149,3 +149,52 @@ export interface SupportList {
   tickets: SupportTicket[];
   pagination: { current_page: number; last_page: number; total: number };
 }
+
+export interface SubscriptionPlan {
+  id: number;
+  name: string;
+  monthly_amount: number;
+  period_days: number;
+  grace_days: number;
+  is_default: boolean;
+  is_active: boolean;
+}
+
+export interface BuildingSubscriptionRow {
+  building_id: number | string;
+  building_name: string | null;
+  owner_id: number | null;
+  status: string;
+  status_label: string;
+  usable: boolean;
+  period_ends_at: string;
+  grace_ends_at: string | null;
+  plan: SubscriptionPlan;
+  invoice: { id: number; period_key: string; amount: number; status: string; paid_at: string | null } | null;
+}
+
+export interface AdminBuilding {
+  id: number;
+  name: string;
+  address: string | null;
+  floors: number;
+  units_count: number;
+  members_count: number;
+  owner: { id: number; first_name: string | null; last_name: string | null; mobile: string } | null;
+  subscription: {
+    status: string;
+    status_label: string;
+    plan_name: string | null;
+    period_ends_at: string;
+  } | null;
+}
+
+export interface AdminBuildingList {
+  buildings: AdminBuilding[];
+  pagination: { current_page: number; last_page: number; total: number };
+}
+
+export interface AdminBuildingDetail {
+  building: AdminBuilding;
+  subscription: BuildingSubscriptionRow | null;
+}

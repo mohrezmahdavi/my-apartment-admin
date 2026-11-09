@@ -21,6 +21,16 @@ export function GridIcon(props: IconProps) {
   );
 }
 
+export function BuildingIcon(props: IconProps) {
+  return (
+    <Base {...props}>
+      <path d="M4 20V8.5L12 4l8 4.5V20" strokeLinejoin="round" />
+      <path d="M9 20v-6h6v6" strokeLinejoin="round" />
+      <path d="M9 10h.01M15 10h.01M12 10h.01" strokeLinecap="round" />
+    </Base>
+  );
+}
+
 export function UsersIcon(props: IconProps) {
   return (
     <Base {...props}>

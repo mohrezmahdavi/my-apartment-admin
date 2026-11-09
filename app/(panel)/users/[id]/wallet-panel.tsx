@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { faNumber } from "@/lib/format";
+import { applyAmountGrouping, faNumber } from "@/lib/format";
 import { field, numberField, optionalField } from "@/lib/form";
 import { DEPOSIT, type WalletSnapshot } from "@/lib/types";
 
@@ -18,7 +18,7 @@ export function WalletPanel({ wallet, adjustable, onSubmit }: { wallet: WalletSn
             <option value="deposit">واریز</option>
             <option value="withdraw">برداشت</option>
           </select>
-          <input className="field" name="amount" type="number" min={1} placeholder="مبلغ" required />
+          <input className="field" name="amount" dir="ltr" inputMode="numeric" placeholder="مبلغ" required onInput={(event) => applyAmountGrouping(event.currentTarget)} />
           <input className="field" name="description" placeholder="توضیح" />
           <button className="btn btn-primary" type="submit">ثبت</button>
         </form>
