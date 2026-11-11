@@ -18,6 +18,7 @@ export const navItems: NavItem[] = [
   { href: "/payments", label: "درگاه پرداخت", permission: "payments.view", description: "درگاه فعال و کارمزد شارژ", icon: CardIcon },
   { href: "/support", label: "پشتیبانی", permission: "support.view", description: "درخواست‌های کاربران", icon: SupportIcon },
   { href: "/subscriptions", label: "اشتراک ساختمان", permission: "subscriptions.view", description: "پلن‌ها و قفل اشتراک", icon: ReceiptIcon },
+  { href: "/sms-packages", label: "بسته‌های پیامک", permission: "sms_packages.view", description: "قیمت و تعداد پیامک یادآوری", icon: CardIcon },
   { href: "/settings", label: "تنظیمات", permission: "settings.manage", description: "ورود اپلیکیشن و پوش", icon: SlidersIcon },
 ];
 

@@ -79,6 +79,7 @@ Routes are mounted from `routes/api.php` with prefix `admin`, on top of Laravel'
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |
 | `building-service/v1` | buildings list and show | `buildings.view` |
 | `subscription-service/v1` | plans, settings, assign/extend/waive | `subscriptions.view` `subscriptions.manage` |
+| `notification-service/v1` | sms package CRUD | `sms_packages.view` `sms_packages.manage` |
 
 Protected routes use `auth:sanctum` and `admin` (`EnsureAdmin`). `CheckPermission` reads `$request->user()`.
 

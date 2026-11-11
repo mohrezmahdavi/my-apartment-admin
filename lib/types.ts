@@ -150,6 +150,16 @@ export interface SupportList {
   pagination: { current_page: number; last_page: number; total: number };
 }
 
+export interface SmsPackage {
+  id: number;
+  code: string;
+  label: string;
+  credits: number;
+  amount: number;
+  sort: number;
+  is_active: boolean;
+}
+
 export interface SubscriptionPlan {
   id: number;
   name: string;

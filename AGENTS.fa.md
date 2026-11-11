@@ -79,6 +79,7 @@ Authorization: Bearer <admin_token>
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |
 | `building-service/v1` | فهرست و جزئیات ساختمان | `buildings.view` |
 | `subscription-service/v1` | پلن‌ها، تنظیمات، تمدید | `subscriptions.view` `subscriptions.manage` |
+| `notification-service/v1` | ساخت و ویرایش بسته پیامک | `sms_packages.view` `sms_packages.manage` |
 
 مسیرهای محافظت‌شده `auth:sanctum` و `admin` یعنی `EnsureAdmin` دارند. `CheckPermission` از `$request->user()` می‌خواند.
 

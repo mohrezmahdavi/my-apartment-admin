@@ -45,4 +45,6 @@ export const apiPaths = {
   subscriptionAssignPlan: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/plan`,
   subscriptionExtend: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/extend`,
   subscriptionWaive: (buildingId: string | number) => `${subscriptions}/buildings/${buildingId}/waive`,
+  smsPackages: "/notification-service/v1/sms-packages",
+  smsPackage: (id: string | number) => `/notification-service/v1/sms-packages/${id}`,
 };
