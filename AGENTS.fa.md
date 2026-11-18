@@ -73,7 +73,7 @@ Authorization: Bearer <admin_token>
 | همان | `POST logout` و `GET me` و `GET dashboard` | نشست ادمین |
 | همان | CRUD کاربران | `users.view` و `users.create` و `users.edit` و `users.delete` |
 | `acl-service/v1` | دسترسی‌ها، CRUD نقش، `PUT users/{user}/roles` | `roles.view` یا `roles.manage` |
-| `wallet-service/v1` | `GET users/{user}/wallet` و `POST .../adjust` | `wallet.view` و `wallet.adjust` |
+| `wallet-service/v1` | `GET users/{user}/wallet` و `POST .../adjust` و فهرست/واریز/رد تسویه | `wallet.view` و `wallet.adjust` |
 | `bill-service/v1` | سرویس‌ها، `refresh-cache`، `finnotech-token` | `bills.view` و `bills.manage` |
 | `payment-service/v1` | درگاه و `refresh-cache` | `payments.view` و `payments.manage` |
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |

@@ -16,6 +16,7 @@ export const navItems: NavItem[] = [
   { href: "/roles", label: "نقش‌ها", permission: "roles.view", description: "دسترسی‌ها و نقش‌های مدیریتی", icon: ShieldIcon },
   { href: "/bills", label: "قبض‌ها", permission: "bills.view", description: "سرویس استعلام و کارمزد", icon: ReceiptIcon },
   { href: "/payments", label: "درگاه پرداخت", permission: "payments.view", description: "درگاه فعال و کارمزد شارژ", icon: CardIcon },
+  { href: "/settlements", label: "تسویه کیف پول", permission: "wallet.view", description: "درخواست واریز به حساب بانکی", icon: CardIcon },
   { href: "/support", label: "پشتیبانی", permission: "support.view", description: "درخواست‌های کاربران", icon: SupportIcon },
   { href: "/subscriptions", label: "اشتراک ساختمان", permission: "subscriptions.view", description: "پلن‌ها و قفل اشتراک", icon: ReceiptIcon },
   { href: "/sms-packages", label: "بسته‌های پیامک", permission: "sms_packages.view", description: "قیمت و تعداد پیامک یادآوری", icon: CardIcon },

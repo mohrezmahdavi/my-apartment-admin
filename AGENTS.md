@@ -73,7 +73,7 @@ Routes are mounted from `routes/api.php` with prefix `admin`, on top of Laravel'
 | same | `POST logout`, `GET me`, `GET dashboard` | admin session |
 | same | users CRUD | `users.view` `users.create` `users.edit` `users.delete` |
 | `acl-service/v1` | permissions, roles CRUD, `PUT users/{user}/roles` | `roles.view` or `roles.manage` |
-| `wallet-service/v1` | `GET users/{user}/wallet`, `POST .../adjust` | `wallet.view` `wallet.adjust` |
+| `wallet-service/v1` | `GET users/{user}/wallet`, `POST .../adjust`, settlements list/pay/reject | `wallet.view` `wallet.adjust` |
 | `bill-service/v1` | providers, `refresh-cache`, `finnotech-token` | `bills.view` `bills.manage` |
 | `payment-service/v1` | gateway, `refresh-cache`, fee, `fee/adjust` | `payments.view` `payments.manage` |
 | `setting-service/v1` | `GET/PATCH settings` | `settings.manage` |

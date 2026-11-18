@@ -56,6 +56,24 @@ export interface WalletTransaction {
 
 export const DEPOSIT = 1;
 
+export interface WalletSettlementRow {
+  id: number;
+  amount: number;
+  status: string;
+  status_label: string;
+  card_number: string;
+  iban: string;
+  rejection_reason: string | null;
+  created_at: string | null;
+  inquired_at: string | null;
+  user: { id: number; first_name: string | null; last_name: string | null; mobile: string } | null;
+}
+
+export interface WalletSettlementList {
+  settlements: WalletSettlementRow[];
+  pagination: { current_page: number; last_page: number; per_page: number; total: number };
+}
+
 export interface DriverOption {
   key: string;
   label: string;
