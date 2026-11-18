@@ -3,6 +3,7 @@ export interface AdminUser {
   first_name: string | null;
   last_name: string | null;
   mobile: string;
+  national_id_verified?: boolean;
   email: string | null;
   created_at?: string | null;
   roles?: Role[];

@@ -11,7 +11,10 @@ export function ProfileForm({ user, editable, onSubmit }: { user: AdminUser; edi
       <h3 className="font-black md:col-span-2">اطلاعات حساب</h3>
       <input className="field" name="first_name" defaultValue={user.first_name ?? ""} disabled={!editable} aria-label="نام" />
       <input className="field" name="last_name" defaultValue={user.last_name ?? ""} disabled={!editable} aria-label="نام خانوادگی" />
-      <input className="field" name="mobile" dir="ltr" defaultValue={user.mobile} disabled={!editable} aria-label="موبایل" />
+      <input className="field" name="mobile" dir="ltr" defaultValue={user.mobile} readOnly={Boolean(user.national_id_verified)} disabled={!editable} aria-label="موبایل" />
+      {user.national_id_verified ? (
+        <p className="text-sm text-muted md:col-span-2">کد ملی این حساب با شاهکار تطبیق شده و شماره موبایل قفل است.</p>
+      ) : null}
       <input className="field" name="email" dir="ltr" defaultValue={user.email ?? ""} disabled={!editable} aria-label="ایمیل" />
       {editable ? (
         <>
