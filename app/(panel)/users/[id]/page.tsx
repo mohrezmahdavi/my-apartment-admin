@@ -20,7 +20,8 @@ export default function UserDetailPage() {
   const action = useAction();
   const userQuery = useQuery<{ user: AdminUser }>(apiPaths.user(params.id));
   const rolesQuery = useQuery<{ roles: Role[] }>(can("roles.view") ? apiPaths.roles : null);
-  const walletQuery = useQuery<WalletSnapshot>(can("wallet.view") ? apiPaths.userWallet(params.id) : null);
+  const [walletPage, setWalletPage] = useState(1);
+  const walletQuery = useQuery<WalletSnapshot>(can("wallet.view") ? apiPaths.userWallet(params.id, `page=${walletPage}`) : null);
   const [selectedRoles, setSelectedRoles] = useState<number[] | null>(null);
   const user = userQuery.data?.user ?? null;
   const roleIds = selectedRoles ?? user?.roles?.map((role) => role.id) ?? [];
@@ -78,7 +79,7 @@ export default function UserDetailPage() {
         <RolesEditor roles={rolesQuery.data?.roles ?? []} selected={roleIds} onChange={setSelectedRoles} onSubmit={saveRoles} />
       ) : null}
       {walletQuery.data ? (
-        <WalletPanel wallet={walletQuery.data} adjustable={can("wallet.adjust")} onSubmit={adjustWallet} />
+        <WalletPanel wallet={walletQuery.data} adjustable={can("wallet.adjust")} onPage={setWalletPage} onSubmit={adjustWallet} />
       ) : null}
     </Screen>
   );

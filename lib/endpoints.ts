@@ -21,7 +21,7 @@ export const apiPaths = {
   role: (id: string | number) => `${acl}/roles/${id}`,
   permissions: `${acl}/permissions`,
   userRoles: (id: string | number) => `${acl}/users/${id}/roles`,
-  userWallet: (id: string | number) => `${wallet}/users/${id}/wallet`,
+  userWallet: (id: string | number, query = "") => (query ? `${wallet}/users/${id}/wallet?${query}` : `${wallet}/users/${id}/wallet`),
   adjustWallet: (id: string | number) => `${wallet}/users/${id}/wallet/adjust`,
   settlements: (query = "") => (query ? `${wallet}/settlements?${query}` : `${wallet}/settlements`),
   settlementPay: (id: string | number) => `${wallet}/settlements/${id}/pay`,

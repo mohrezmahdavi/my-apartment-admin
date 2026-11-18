@@ -5,7 +5,7 @@ import { applyAmountGrouping, faNumber } from "@/lib/format";
 import { field, numberField, optionalField } from "@/lib/form";
 import { DEPOSIT, type WalletSnapshot } from "@/lib/types";
 
-export function WalletPanel({ wallet, adjustable, onSubmit }: { wallet: WalletSnapshot; adjustable: boolean; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
+export function WalletPanel({ wallet, adjustable, onPage, onSubmit }: { wallet: WalletSnapshot; adjustable: boolean; onPage?: (page: number) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void }) {
   return (
     <div className="card space-y-4 p-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -35,6 +35,13 @@ export function WalletPanel({ wallet, adjustable, onSubmit }: { wallet: WalletSn
           </li>
         ))}
       </ul>
+      {wallet.pagination && wallet.pagination.last_page > 1 && onPage ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <button className="btn btn-ghost" type="button" disabled={wallet.pagination.current_page <= 1} onClick={() => onPage(wallet.pagination!.current_page - 1)}>قبلی</button>
+          <span className="text-sm text-muted">صفحه {faNumber(wallet.pagination.current_page)} از {faNumber(wallet.pagination.last_page)}</span>
+          <button className="btn btn-ghost" type="button" disabled={wallet.pagination.current_page >= wallet.pagination.last_page} onClick={() => onPage(wallet.pagination!.current_page + 1)}>بعدی</button>
+        </div>
+      ) : null}
     </div>
   );
 }
