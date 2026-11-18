@@ -2,7 +2,7 @@
 
 راهنمای انگلیسی: [README.md](README.md).
 
-راهنمای ایجنت: [AGENTS.md](AGENTS.md). نسخهٔ فارسی ایجنت: [AGENTS.fa.md](AGENTS.fa.md).
+راهنمای ایجنت: [AGENTS.md](AGENTS.md). نسخهٔ فارسی ایجنت: [AGENTS.fa.md](AGENTS.fa.md). فهرست صفحه‌ها: [docs/fa.md](docs/fa.md).
 
 این رابط مدیریت بک‌اند ساختمان است. پروژهٔ Next.js جداگانه‌ای است و داخل فرانت ساکنان قرار ندارد.
 

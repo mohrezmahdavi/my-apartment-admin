@@ -2,7 +2,7 @@
 
 Persian guide: [README.fa.md](README.fa.md).
 
-Agent guide: [AGENTS.md](AGENTS.md). Persian agent guide: [AGENTS.fa.md](AGENTS.fa.md).
+Agent guide: [AGENTS.md](AGENTS.md). Persian agent guide: [AGENTS.fa.md](AGENTS.fa.md). Screen list: [docs/en.md](docs/en.md).
 
 This is the management UI for the apartment backend. It is a separate Next.js app. It is not a route inside the resident frontend.
 
