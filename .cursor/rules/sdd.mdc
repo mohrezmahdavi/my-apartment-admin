@@ -1,0 +1,18 @@
+---
+description: Specification-driven changes for the Pagard admin panel
+alwaysApply: true
+---
+
+# SDD
+
+A screen or permission change starts in the spec, then the code. The spec and the code in one change say the same thing.
+
+Screen spec: `docs/fa.md` and `docs/en.md`. Keep `AGENTS.md` and `AGENTS.fa.md` in agreement. The HTTP contract and permission key stay in the backend module doc.
+
+1. Read the screen spec and the backend module spec.
+2. Write the route and the permission string into both screen docs before editing the page.
+3. Implement only that screen. Use `lib/http.ts` and `lib/endpoints.ts`. Read `response.items`. Register the nav item with the same permission string the middleware uses.
+4. Typecheck with `./node_modules/.bin/tsc --noEmit`, then click through the flow.
+5. If the panel forces a contract change, update the backend spec in both languages in the same change.
+
+Do not ship a screen that exists only in chat.

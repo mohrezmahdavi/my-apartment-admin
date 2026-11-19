@@ -6,6 +6,12 @@ Human setup guide: [README.md](README.md) and [README.fa.md](README.fa.md).
 
 This file is the source of truth for work in `my-apartment-admin`.
 
+## Specification first
+
+A screen change starts in the spec, then the code. Cursor rule: `.cursor/rules/sdd.mdc`.
+
+Screen spec: `docs/fa.md` and `docs/en.md`. Write the route and the permission string into both before editing the page. The permission on the nav item is the same string as the route middleware. The HTTP contract stays in the backend module doc. If this file changes, update `AGENTS.fa.md` in the same change.
+
 ## What this app is
 
 Next.js 16.2, React 19, Tailwind 4, TypeScript. Dev and production servers use port 3001.
